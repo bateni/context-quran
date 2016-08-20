@@ -27,4 +27,15 @@ for chap in range(1,115):
     f.close()
 
 print verses_in_chapter
-
+f = open(output_meta_data, 'w')
+f.write('return {\n')
+f.write('  chapters = {\n')
+for k,v in verses_in_chapter.iteritems():
+    basmalah = 'true'
+    if k == 1 or k == 10:
+        basmalah = 'false'
+    print k, v
+    f.write('    [%d] = { basmalah = "%s", name = "%s", verses = %d, }\n' % (k, basmalah, '', v))
+f.write('  }\n')
+f.write('}\n')
+f.close()
