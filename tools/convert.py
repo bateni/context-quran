@@ -55,7 +55,7 @@ def produce_meta():
     f.write('  chapters = {\n')
     for k,v in verses_in_chapter.iteritems():
         basmalah = 'true'
-        if k == 1 or k == 10:
+        if k == 1 or k == 9:
             basmalah = 'false'
         f.write('    [%d] = { basmalah = %s, name = "%s", verses = %d, }\n' %
                 (k, basmalah, chapter_names[k].encode('utf-8'), v))
