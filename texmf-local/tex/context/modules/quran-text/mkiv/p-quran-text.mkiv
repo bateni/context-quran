@@ -1,0 +1,56 @@
+%D \module
+%D   [      file=p-quran-text,
+%D        version=0.20,
+%D          title=\CONTEXT\ User Module,
+%D       subtitle=quran-text,
+%D         author={Mohammad Hossein Bateni},
+%D           date=\currentdate,
+%D      copyright={Mohammad Hossein Bateni},
+%D        license=GNU General Public License v3]
+
+% dabeer module for Persian typesetting in ConTeXt
+% Copyright (C) 2015, 2016  Mohammad Hossein Bateni
+
+% This program is free software; you can redistribute it and/or
+% modify it under the terms of the GNU General Public License
+% as published by the Free Software Foundation; either version 3
+% of the License, or (at your option) any later version.
+
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+
+% You should have received a copy of the GNU General Public License
+% along with this program; if not, write to the Free Software
+% Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+%D The \LUA\ code should go to inside a \LUA\ file but let us keep it
+%D here for now.  We read the meta data, compute prefix sums, and load
+%D all the buffer definitions.
+\startluacode
+qurantext = qurantext or {}
+qurantext.data = dofile(resolvers.findfile('quran-meta.lua'))
+qurantext.psum = {}
+local psum = 0
+for chap, info in ipairs(qurantext.data.chapters) do
+  psum = psum + info.verses
+  qurantext.psum[chap] = psum
+end
+-- now load all the text files.
+-- todo: only load as needed.
+context.begingroup()
+context("\\def\\q{quran-text}")
+local last_chunk = psum / qurantext.data.verses_per_chunk
+for i=0,last_chunk do
+  context.input('quran-text-' .. i .. '.tex')
+end
+context.endgroup()
+\stopluacode
+
+
+%D This is the main interface to the module. The two arguments are the
+%D chapter and verse number, respectively.
+\define[2]\ShowVerse{%
+  \getbuffer[quran-text:#1:#2]%
+}
