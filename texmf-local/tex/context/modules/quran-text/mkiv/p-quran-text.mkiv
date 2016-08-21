@@ -1,6 +1,6 @@
 %D \module
 %D   [      file=p-quran-text,
-%D        version=0.20,
+%D        version=0.22,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=quran-text,
 %D         author={Mohammad Hossein Bateni},
@@ -51,6 +51,23 @@ context.endgroup()
 
 %D This is the main interface to the module. The two arguments are the
 %D chapter and verse number, respectively.
+%D TODO: option to not mark end of verse.
 \define[2]\ShowVerse{%
-  \getbuffer[quran-text:#1:#2]%
+  \getbuffer[quran-text:#1:#2]~\qurantextayamarker{#2}
 }
+
+\unprotect
+
+%D We next define different styles of marking the end of verses
+\define[1]\ayamarker_a{#1}  % as plain as it gets
+\define[1]\ayamarker_b{(\arabicdecimals{#1})}  % use parentheses
+\define[1]\ayamarker_c{﴿\arabicdecimals{#1}﴾}  % use decorative parentheses
+\define[1]\ayamarker_d{۝\arabicdecimals{#1}}   % use end-of-aya marker
+
+\def\qurantextayamarker{\csname ayamarker_\qurantext_ayamarker_alternative\endcsname}
+
+\define[1]\SetEndOfVerseStyle{%
+  \gdef\qurantext_ayamarker_alternative{#1}}
+\SetEndOfVerseStyle{d}  %% default
+
+\protect
