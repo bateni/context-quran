@@ -64,6 +64,7 @@ local function error(msg)
   print('quran-text error:', msg)
 end
 
+-- TODO: add initializer with cache on lua side
 local function loadversechunk(name,chap,ver)
   local my_chap = qurantext.data.chapters[chap]
   if not my_chap then
@@ -88,17 +89,16 @@ init('')
 \stopluacode
 
 
-%% TODO: optional parameter
-%% TODO: add initializer with cache on lua side
 %D This is the main interface to the module. The two arguments are the
 %D chapter and verse number, respectively.
-%D TODO: option to not mark end of verse.
-\define[2]\ShowVerse{%
-  \edef\currentQuranText{}%
+\unexpanded\def\ShowVerse{\dosingleempty\doShowVerse}
+
+\def\doShowVerse[#1]#2#3{%
+  \edef\currentQuranText{#1}%
 %  \QuranTextparameter{prefix}%
   \writestatus{quran}{name: \currentQuranText, prefix:  \QuranTextparameter{prefix}}%
-  \doifelsebuffer{quran-text:#1:#2}{}{\directlua{qurantext.loadversechunk("\currentQuranText",#1,#2)}}%
-  \getbuffer[quran-text:#1:#2]\qurantextayamarker{#2}%
+  \doifelsebuffer{quran-text:#2:#3}{}{\directlua{qurantext.loadversechunk("\currentQuranText",#2,#3)}}%
+  \getbuffer[quran-text:#2:#3]\qurantextayamarker{#3}%
 }
 
 \unprotect
