@@ -1,6 +1,6 @@
 %D \module
 %D   [      file=p-quran-text,
-%D        version=0.22,
+%D        version=0.25,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=quran-text,
 %D         author={Mohammad Hossein Bateni},
@@ -30,22 +30,42 @@
 %D all the buffer definitions.
 \startluacode
 qurantext = qurantext or {}
-qurantext.data = dofile(resolvers.findfile('quran-meta.lua'))
-qurantext.psum = {}
-local psum = 0
-for chap, info in ipairs(qurantext.data.chapters) do
-  psum = psum + info.verses
-  qurantext.psum[chap] = psum
+
+local function init()
+  qurantext.data = dofile(resolvers.findfile('quran-meta.lua'))
+  qurantext.psum = {}
+  local psum = 0
+  for chap, info in ipairs(qurantext.data.chapters) do
+    psum = psum + info.verses
+    qurantext.psum[chap] = psum
+  end
 end
--- now load all the text files.
--- todo: only load as needed.
-context.begingroup()
-context("\\def\\q{quran-text}")
-local last_chunk = psum / qurantext.data.verses_per_chunk
-for i=0,last_chunk do
-  context.input('quran-text-' .. i .. '.tex')
+
+local function error(msg)
+  print('quran-text error:', msg)
 end
-context.endgroup()
+
+local function loadversechunk(chap,ver)
+  local my_chap = qurantext.data.chapters[chap]
+  if not my_chap then
+    error('invalid chapter number ' .. chap)
+    return
+  end
+  if ver < 1 or ver > my_chap.verses then
+    error('invalid verse number ' .. ver .. ' in chapter ' .. chap)
+    return
+  end
+  local global_verse = qurantext.psum[chap - 1] or 0
+  global_verse = global_verse + ver
+  local chunk = math.floor(global_verse / qurantext.data.verses_per_chunk)
+  context.begingroup()
+  context("\\def\\q{quran-text}")
+  context.input('quran-text-' .. chunk .. '.tex')
+  context.endgroup()  
+end
+
+qurantext.loadversechunk = loadversechunk
+init()
 \stopluacode
 
 
@@ -53,6 +73,7 @@ context.endgroup()
 %D chapter and verse number, respectively.
 %D TODO: option to not mark end of verse.
 \define[2]\ShowVerse{%
+  \doifelsebuffer{quran-text:#1:#2}{}{\directlua{qurantext.loadversechunk(#1,#2)}}%
   \getbuffer[quran-text:#1:#2]~\qurantextayamarker{#2}
 }
 
