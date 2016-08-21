@@ -31,10 +31,26 @@
 
 \writestatus{loading}{Loading the QuranText module}
 
+\definenamespace
+        [quran]
+        [type=module,
+         comment=quran text module,
+         version=1,
+         name=QuranText,
+         parent=quran,
+         setup=list,
+         command=yes,
+         style=yes]
+
+\setupQuranText
+        [prefix=quran,  %% not implemented yet
+         endofverse=d,  %% a,b,c,d,off; not implemented yet
+        ]
+
 \startluacode
 qurantext = qurantext or {}
 
-local function init()
+local function init(name)
   qurantext.data = dofile(resolvers.findfile('quran-meta.lua'))
   qurantext.psum = {}
   local psum = 0
@@ -48,7 +64,7 @@ local function error(msg)
   print('quran-text error:', msg)
 end
 
-local function loadversechunk(chap,ver)
+local function loadversechunk(name,chap,ver)
   local my_chap = qurantext.data.chapters[chap]
   if not my_chap then
     error('invalid chapter number ' .. chap)
@@ -68,15 +84,20 @@ local function loadversechunk(chap,ver)
 end
 
 qurantext.loadversechunk = loadversechunk
-init()
+init('')
 \stopluacode
 
 
+%% TODO: optional parameter
+%% TODO: add initializer with cache on lua side
 %D This is the main interface to the module. The two arguments are the
 %D chapter and verse number, respectively.
 %D TODO: option to not mark end of verse.
 \define[2]\ShowVerse{%
-  \doifelsebuffer{quran-text:#1:#2}{}{\directlua{qurantext.loadversechunk(#1,#2)}}%
+  \edef\currentQuranText{}%
+%  \QuranTextparameter{prefix}%
+  \writestatus{quran}{name: \currentQuranText, prefix:  \QuranTextparameter{prefix}}%
+  \doifelsebuffer{quran-text:#1:#2}{}{\directlua{qurantext.loadversechunk("\currentQuranText",#1,#2)}}%
   \getbuffer[quran-text:#1:#2]~\qurantextayamarker{#2}
 }
 
