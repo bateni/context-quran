@@ -57,7 +57,7 @@ def produce_meta():
         basmalah = 'true'
         if k == 1 or k == 9:
             basmalah = 'false'
-        f.write('    [%d] = { basmalah = %s, name = "%s", verses = %d, }\n' %
+        f.write('    [%d] = { basmalah = %s, name = "%s", verses = %d, },\n' %
                 (k, basmalah, chapter_names[k].encode('utf-8'), v))
     f.write('  },\n')
     f.write('  verses_per_chunk = %d,\n' % (verses_per_chunk))
