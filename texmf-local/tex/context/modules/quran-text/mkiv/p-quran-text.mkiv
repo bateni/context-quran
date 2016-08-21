@@ -44,7 +44,7 @@
 
 \setupQuranText
         [prefix=quran,  %% not implemented yet
-         endofverse=d,  %% a,b,c,d,off; not implemented yet
+         endofverse=d,  %% a,b,c,d,off
         ]
 
 \startluacode
@@ -98,22 +98,23 @@ init('')
 %  \QuranTextparameter{prefix}%
   \writestatus{quran}{name: \currentQuranText, prefix:  \QuranTextparameter{prefix}}%
   \doifelsebuffer{quran-text:#1:#2}{}{\directlua{qurantext.loadversechunk("\currentQuranText",#1,#2)}}%
-  \getbuffer[quran-text:#1:#2]~\qurantextayamarker{#2}
+  \getbuffer[quran-text:#1:#2]\qurantextayamarker{#2}%
 }
 
 \unprotect
 
+%% TODO: define persiandecimals versions but perhaps numberstyle is better.
 %D We next define different styles of marking the end of verses
 \define[1]\ayamarker_a{#1}  % as plain as it gets
 \define[1]\ayamarker_b{(\arabicdecimals{#1})}  % use parentheses
 \define[1]\ayamarker_c{﴿\arabicdecimals{#1}﴾}  % use decorative parentheses
 \define[1]\ayamarker_d{۝\arabicdecimals{#1}}   % use end-of-aya marker
 
-\def\qurantextayamarker{\csname ayamarker_\qurantext_ayamarker_alternative\endcsname}
-
-%D Here is how we set the style for end-of-aya marker.
-\define[1]\SetEndOfVerseStyle{%
-  \gdef\qurantext_ayamarker_alternative{#1}}
-\SetEndOfVerseStyle{d}  %% default
+\def\qurantextayamarker#1{%
+        \edef\endofverseoption{\QuranTextparameter{endofverse}}%
+        \writestatus{quran}{\endofverseoption}%
+        \ifcsname ayamarker_\endofverseoption\endcsname%
+        ~\csname ayamarker_\endofverseoption\endcsname{#1}%
+        \else\fi}
 
 \protect
