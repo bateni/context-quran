@@ -36,7 +36,7 @@ local function loadversechunk(name,chap,ver)
     return
   end
   local global_verse = qurantext.psum[chap - 1] or 0
-  global_verse = global_verse + ver
+  global_verse = global_verse + ver - 1
   local chunk = math.floor(global_verse / qurantext.data.verses_per_chunk)
   context.begingroup()
   context("\\def\\q{quran-text}")
