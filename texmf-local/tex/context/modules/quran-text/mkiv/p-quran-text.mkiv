@@ -31,6 +31,8 @@
 
 \writestatus{loading}{Loading the QuranText module}
 
+\registerctxluafile{p-quran-text}{1.000}
+
 \definenamespace
         [quran]
         [type=module,
@@ -49,47 +51,6 @@
          color=,
         ]
 
-\startluacode
-qurantext = qurantext or {}
-
-local function init(name)
-  qurantext.data = dofile(resolvers.findfile('quran-meta.lua'))
-  qurantext.psum = {}
-  local psum = 0
-  for chap, info in ipairs(qurantext.data.chapters) do
-    psum = psum + info.verses
-    qurantext.psum[chap] = psum
-  end
-end
-
-local function error(msg)
-  print('quran-text error:', msg)
-end
-
--- TODO: add initializer with cache on lua side
-local function loadversechunk(name,chap,ver)
-  local my_chap = qurantext.data.chapters[chap]
-  if not my_chap then
-    error('invalid chapter number ' .. chap)
-    return
-  end
-  if ver < 1 or ver > my_chap.verses then
-    error('invalid verse number ' .. ver .. ' in chapter ' .. chap)
-    return
-  end
-  local global_verse = qurantext.psum[chap - 1] or 0
-  global_verse = global_verse + ver
-  local chunk = math.floor(global_verse / qurantext.data.verses_per_chunk)
-  context.begingroup()
-  context("\\def\\q{quran-text}")
-  context.input('quran-text-' .. chunk .. '.tex')
-  context.endgroup()  
-end
-
-qurantext.loadversechunk = loadversechunk
-init('')
-\stopluacode
-
 
 %D This is the main interface to the module. There is an optionaml
 %D argument, which is the name of the QuranText instance.  The following
@@ -102,7 +63,7 @@ init('')
   \edef\currentQuranText{#1}%
 %  \QuranTextparameter{prefix}%
   \useQuranTextstyleandcolor{style}{color}%
-  \doifelsebuffer{quran-text:#2:#3}{}{\directlua{qurantext.loadversechunk("\currentQuranText",#2,#3)}}%
+  \doifelsebuffer{quran-text:#2:#3}{}{\directlua{moduledata.qurantext.loadversechunk("\currentQuranText",#2,#3)}}%
   \getbuffer[quran-text:#2:#3]\qurantextayamarker{#3}%
   \endgroup%
 }
