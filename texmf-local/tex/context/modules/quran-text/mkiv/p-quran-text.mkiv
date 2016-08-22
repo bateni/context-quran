@@ -1,6 +1,6 @@
 %D \module
 %D   [      file=p-quran-text,
-%D        version=0.35,
+%D        version=0.40,
 %D          title=\CONTEXT\ User Module,
 %D       subtitle=quran-text,
 %D         author={Mohammad Hossein Bateni},
@@ -31,7 +31,7 @@
 
 \writestatus{loading}{Loading the QuranText module}
 
-\registerctxluafile{p-quran-text}{1.001}
+\registerctxluafile{p-quran-text}{1.010}
 
 \definenamespace
         [quran]
@@ -57,7 +57,7 @@
 
 \unprotect
 
-%D This is the main interface to the module. There is an optionaml
+%D This is the main interface to the module. There is an optional
 %D argument, which is the name of the QuranText instance.  The following
 %D two mandatory arguments are the chapter and verse number,
 %D respectively.
@@ -67,10 +67,13 @@
   \edef\currentQuranText{#1}%
   \QuranTextparameter{before}%
   {%
-%  \QuranTextparameter{prefix}%
   \useQuranTextstyleandcolor{style}{color}%
-  \doifelsebuffer{quran-text:#2:#3}{}{\directlua{moduledata.qurantext.loadversechunk("\currentQuranText",#2,#3)}}%
-  \getbuffer[quran-text:#2:#3]\qurantextayamarker{#3}%
+  \edef\currentQuranTextprefix{\QuranTextparameter{prefix}}%
+  \edef\mybuffername{\currentQuranTextprefix-text:#2:#3}%
+  \doifelsebuffer{\mybuffername}
+     {}
+     {\directlua{moduledata.qurantext.loadversechunk("\currentQuranTextprefix",#2,#3)}}%
+  \getbuffer[\mybuffername]\qurantextayamarker{#3}%
   }%
   \QuranTextparameter{after}%
 }
