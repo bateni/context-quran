@@ -51,8 +51,11 @@
          color=,
          before=,
          after=,
+         sectioninfo=, %% on,off not implemented yet
+         pauseinfo=,   %% on,off not implemented yet
         ]
 
+\unprotect
 
 %D This is the main interface to the module. There is an optionaml
 %D argument, which is the name of the QuranText instance.  The following
@@ -72,8 +75,6 @@
   \QuranTextparameter{after}%
 }
 
-\unprotect
-
 %% TODO: define persiandecimals versions but perhaps numberstyle is better.
 %D We next define different styles of marking the end of verses
 \define[1]\ayamarker_a{#1}  % as plain as it gets
@@ -89,3 +90,7 @@
         \else\fi}
 
 \protect
+
+
+%% TODO: example to come
+
