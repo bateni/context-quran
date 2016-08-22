@@ -1,5 +1,5 @@
 if not modules then modules = { } end modules ['p-quran-text'] = {
-    version   = 1.000,
+    version   = 1.001,
     comment   = "companion to p-quran-text.mkiv",
     author    = "Mohammad Hossein Bateni",
     copyright = "Mohammad Hossein Bateni",
