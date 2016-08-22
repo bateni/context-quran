@@ -49,6 +49,8 @@
          endofverse=d,  %% a,b,c,d,off
          style=,
          color=,
+         before=,
+         after=,
         ]
 
 
@@ -59,13 +61,15 @@
 \unexpanded\def\ShowVerse{\dosingleempty\doShowVerse}
 
 \def\doShowVerse[#1]#2#3{%
-  \begingroup%
   \edef\currentQuranText{#1}%
+  \QuranTextparameter{before}%
+  {%
 %  \QuranTextparameter{prefix}%
   \useQuranTextstyleandcolor{style}{color}%
   \doifelsebuffer{quran-text:#2:#3}{}{\directlua{moduledata.qurantext.loadversechunk("\currentQuranText",#2,#3)}}%
   \getbuffer[quran-text:#2:#3]\qurantextayamarker{#3}%
-  \endgroup%
+  }%
+  \QuranTextparameter{after}%
 }
 
 \unprotect
