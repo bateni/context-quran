@@ -45,6 +45,8 @@
 \setupQuranText
         [prefix=quran,  %% not implemented yet
          endofverse=d,  %% a,b,c,d,off
+         style=,
+         color=,
         ]
 
 \startluacode
@@ -96,11 +98,13 @@ init('')
 \unexpanded\def\ShowVerse{\dosingleempty\doShowVerse}
 
 \def\doShowVerse[#1]#2#3{%
+  \begingroup%
   \edef\currentQuranText{#1}%
 %  \QuranTextparameter{prefix}%
-  \writestatus{quran}{name: \currentQuranText, prefix:  \QuranTextparameter{prefix}}%
+  \useQuranTextstyleandcolor{style}{color}%
   \doifelsebuffer{quran-text:#2:#3}{}{\directlua{qurantext.loadversechunk("\currentQuranText",#2,#3)}}%
   \getbuffer[quran-text:#2:#3]\qurantextayamarker{#3}%
+  \endgroup%
 }
 
 \unprotect
