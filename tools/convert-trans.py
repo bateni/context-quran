@@ -1,7 +1,8 @@
 #!/usr/local/bin/python
 
 translator    = 'makarem'
-input_file    = 'fa.%s.txt' % translator        # single file
+suffix        = '.v2'
+input_file    = 'fa.%s%s.txt' % (translator, suffix)       # single file
 output_prefix = 'qtrans-%s-text-' % translator  # qtrans-makarem-text-99.tex 
 input_meta_data  = 'raw-meta.txt'
 output_meta_data = 'qtrans-%s-meta.lua' % translator
