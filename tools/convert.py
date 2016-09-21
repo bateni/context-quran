@@ -42,7 +42,7 @@ def produce_buffers():
                 print 'error in verse', ver, 'of chapter', chap
             f.write('\\startbuffer[\\q:%d:%d]\n' % (chap, ver))
             f.write(line.encode('utf-8') + '%\n')
-            f.write('\\stopbuffer\n')
+            f.write('\\stopbuffer%\n')
         verses_in_chapter[chap] = ver
 #        f.close()
     print 'Total of', global_verse, 'verses in', chunk+1,'chunks'

@@ -48,7 +48,7 @@ def produce_buffers():
         content = line[2]
         f.write('\\startbuffer[\\q:%d:%d]\n' % (chap, ver))
         f.write(content.encode('utf-8') + '%\n')
-        f.write('\\stopbuffer\n')
+        f.write('\\stopbuffer%\n')
     print 'Total of', global_verse, 'verses in', chunk+1,'chunks', chap,'chapters'
 
 
