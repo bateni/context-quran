@@ -45,12 +45,13 @@
          style=yes]
 
 \setupQuranText
-        [prefix=quran,  %% not implemented yet
+        [prefix=quran,
          endofverse=d,  %% a,b,c,d,off
          style=,
          color=,
          before=,
          after=,
+         setups=,
          sectioninfo=, %% on,off not implemented yet
          pauseinfo=,   %% on,off not implemented yet
         ]
@@ -68,6 +69,7 @@
   \QuranTextparameter{before}%
   {%
   \useQuranTextstyleandcolor{style}{color}%
+  \usesetupsparameter\QuranTextparameter%
   \edef\currentQuranTextprefix{\QuranTextparameter{prefix}}%
   \edef\mybuffername{\currentQuranTextprefix-text:#2:#3}%
   \doifelsebuffer{\mybuffername}
