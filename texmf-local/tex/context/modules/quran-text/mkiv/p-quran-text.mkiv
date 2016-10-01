@@ -82,13 +82,17 @@
         {\addff{removeplacemarks}}%
   \usesetupsparameter\QuranTextparameter%
   \edef\currentQuranTextprefix{\QuranTextparameter{prefix}}%
-  \edef\mybuffername{\currentQuranTextprefix-text:#2:#3}%
-  \doifelsebuffer{\mybuffername}
-     {}
-     {\directlua{moduledata.qurantext.loadversechunk("\currentQuranTextprefix",#2,#3)}}%
-  \getbuffer[\mybuffername]\qurantextayamarker{#3}%
+  \show_single_verse{#2}{#3}%
   }%
   \QuranTextparameter{after}%
+}
+
+\define[2]\show_single_verse{%
+  \edef\mybuffername{\currentQuranTextprefix-text:#1:#2}%
+  \doifelsebuffer{\mybuffername}
+     {}
+     {\directlua{moduledata.qurantext.loadversechunk("\currentQuranTextprefix",#1,#2)}}%
+  \getbuffer[\mybuffername]\qurantextayamarker{#2}%
 }
 
 %% TODO: define persiandecimals versions but perhaps numberstyle is better.
