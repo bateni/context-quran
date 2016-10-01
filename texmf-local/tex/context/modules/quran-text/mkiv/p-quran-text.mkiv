@@ -90,7 +90,8 @@
 }
 
 \define[1]\show_single_verse_from_chapter{%
-  \show_single_verse{\current_quran_chapter}{#1}%
+  \doifnotempty{#1}
+    {\show_single_verse{\current_quran_chapter}{#1}}%
 }
 
 \define[2]\show_single_verse{%
