@@ -1,0 +1,34 @@
+local remove = { ' ' }
+return {
+  name = "quran-text-goodies",
+  version = "1.00",
+  comment = "Provide options for turning off certain non-textual elements",
+  author = "Mohammad Hossein Bateni",
+  features = {
+     {
+    	name = "waqfmarks",
+        type = "multiple",
+        -- Without this, we need to work on "presentation forms"
+	-- Probably irrelevant here
+        prepend = true,
+        data = {
+	   [0x6D6] = remove, -- sly
+	   [0x6D7] = remove, -- qly
+	   [0x6D8] = remove, -- m
+	   [0x6D9] = remove, -- la
+	   [0x6DA] = remove, -- j
+	   [0x6DB] = remove, -- triple dot
+--	   [0x6DC] = remove, -- high seen (sakt?)
+        },
+     },
+     {
+    	name = "placemarks",
+        type = "multiple",
+        prepend = true,
+        data = {
+	   [0x6DE] = remove, -- quarter
+	   [0x6E9] = remove, -- sajda
+        },
+     },
+  },
+}
