@@ -82,9 +82,15 @@
         {\addff{removeplacemarks}}%
   \usesetupsparameter\QuranTextparameter%
   \edef\currentQuranTextprefix{\QuranTextparameter{prefix}}%
-  \show_single_verse{#2}{#3}%
+  \edef\current_quran_chapter{#2}%
+  \gdef\continuing_verse{}%
+  \processcommalist[#3]\show_single_verse_from_chapter%
   }%
   \QuranTextparameter{after}%
+}
+
+\define[1]\show_single_verse_from_chapter{%
+  \show_single_verse{\current_quran_chapter}{#1}%
 }
 
 \define[2]\show_single_verse{%
@@ -92,6 +98,8 @@
   \doifelsebuffer{\mybuffername}
      {}
      {\directlua{moduledata.qurantext.loadversechunk("\currentQuranTextprefix",#1,#2)}}%
+  \doif{\continuing_verse}{y}{ }%
+  \gdef\continuing_verse{y}%
   \getbuffer[\mybuffername]\qurantextayamarker{#2}%
 }
 
