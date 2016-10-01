@@ -4,7 +4,7 @@
 local remove = { 0x200C } -- ZWNJ
 return {
   name = "quran-text-goodies",
-  version = "1.00",
+  version = "1.10",
   comment = "Provide options for turning off certain non-textual elements",
   author = "Mohammad Hossein Bateni",
   features = {

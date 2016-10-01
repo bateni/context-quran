@@ -52,11 +52,18 @@
          before=,
          after=,
          setups=,
-         sectioninfo=, %% on,off not implemented yet
-         pauseinfo=,   %% on,off not implemented yet
+         sectioninfo=, %% on,off
+         pauseinfo=,   %% on,off
         ]
 
 \unprotect
+
+%D These font features let us remove/modify Quran text.  Some fonts do
+%D not support the standard text, or we may not like to have the extra
+%D marks.
+%% TODO: Add a feature to prepare ``middle hamzah'' for standard Arabic fonts.
+\definefontfeature[removewaqfmarks] [goodies=quran-goodies,waqfmarks=yes]
+\definefontfeature[removeplacemarks][goodies=quran-goodies,placemarks=yes]
 
 %D This is the main interface to the module. There is an optional
 %D argument, which is the name of the QuranText instance.  The following
@@ -69,6 +76,10 @@
   \QuranTextparameter{before}%
   {%
   \useQuranTextstyleandcolor{style}{color}%
+  \doif{\QuranTextparameter{pauseinfo}}{off}
+        {\addff{removewaqfmarks}}%
+  \doif{\QuranTextparameter{sectioninfo}}{off}
+        {\addff{removeplacemarks}}%
   \usesetupsparameter\QuranTextparameter%
   \edef\currentQuranTextprefix{\QuranTextparameter{prefix}}%
   \edef\mybuffername{\currentQuranTextprefix-text:#2:#3}%
