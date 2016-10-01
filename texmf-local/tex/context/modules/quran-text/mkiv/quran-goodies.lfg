@@ -1,4 +1,7 @@
-local remove = { ' ' }
+-- local remove = { ' ' }
+-- The following almost removes the extra space but not fully
+-- at least in the Amiri Quran font test.
+local remove = { 0x200C } -- ZWNJ
 return {
   name = "quran-text-goodies",
   version = "1.00",
